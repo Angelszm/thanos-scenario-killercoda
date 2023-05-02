@@ -1,4 +1,5 @@
 # thanos-scenario-killercoda
+Lab1: https://killercoda.com/thanos/scenario/1-globalview
 
 
 
@@ -43,3 +44,14 @@ docker run -d --net=host --rm \
     --store 172.17.0.1:19190 \
     --store 172.17.0.1:19191 \
     --store 172.17.0.1:19192 && echo "Started Thanos Querier"
+    
+    
+    
+    ![image](https://user-images.githubusercontent.com/30867160/235598507-3e9aea2d-c198-4704-8610-a798a66340d8.png)
+    
+    
+    Metrics 
+    - prometheus_tsdb_head_series{cluster="eu1",instance="172.17.0.1:9090",job="prometheus"}
+    - sum(prometheus_tsdb_head_series)
+    - prometheus_tsdb_head_series
+
