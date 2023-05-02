@@ -33,7 +33,7 @@ scrape_configs:
 
 
 
-Deploying Thanos Querier
+## Deploying Thanos Querier
 docker run -d --net=host --rm \
     --name querier \
     quay.io/thanos/thanos:v0.28.0 \
