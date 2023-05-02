@@ -30,3 +30,16 @@ scrape_configs:
   - job_name: 'sidecar'
     static_configs:
       - targets: ['172.17.0.1:19090']
+
+
+
+Deploying Thanos Querier
+docker run -d --net=host --rm \
+    --name querier \
+    quay.io/thanos/thanos:v0.28.0 \
+    query \
+    --http-address 0.0.0.0:29090 \
+    --query.replica-label replica \
+    --store 172.17.0.1:19190 \
+    --store 172.17.0.1:19191 \
+    --store 172.17.0.1:19192 && echo "Started Thanos Querier"
