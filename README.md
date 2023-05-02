@@ -49,9 +49,30 @@ docker run -d --net=host --rm \
     
     ![image](https://user-images.githubusercontent.com/30867160/235598507-3e9aea2d-c198-4704-8610-a798a66340d8.png)
     
-    
-    Metrics 
-    - prometheus_tsdb_head_series{cluster="eu1",instance="172.17.0.1:9090",job="prometheus"}
-    - sum(prometheus_tsdb_head_series)
-    - prometheus_tsdb_head_series
+   
+Metrics 
+ - prometheus_tsdb_head_series{cluster="eu1",instance="172.17.0.1:9090",job="prometheus"}
+ - sum(prometheus_tsdb_head_series)
+ - prometheus_tsdb_head_series
 
+
+
+Notes: 
+- So how Thanos Querier knows how to deduplicate correctly?
+
+If we would look again into Querier configuration we can see that we also set query.replica-label flag. This is exactly the label Querier will try to deduplicate by for HA groups. This means that any metric with exactly the same labels except replica label will be assumed as the metric from the same HA group, and deduplicated accordingly.
+
+```
+If we would open prometheus1_us1.yml config file in the editor or if you go to Prometheus 1 US1 /config. you should see our external labels in external_labels YAML option:
+
+
+  external_labels:
+    cluster: us1
+    replica: 1
+Now if we compare to prometheus0_us1.yaml :
+
+  external_labels:
+    cluster: us1
+    replica: 0
+```
+We can see that since those two replicas scrape the same targets, any metric will be produced twice. Once by replica=1, cluster=us1 Prometheus and once by replica=0, cluster=us1 Prometheus. If we configure Querier to deduplicate by replica we can transparently handle this High Available pair of Prometheus instances to the user.
